@@ -12,3 +12,8 @@ export interface IUser2 {
   level: number,
   password: string
 }
+
+export interface ILogin {
+  username: string,
+  password: string
+}

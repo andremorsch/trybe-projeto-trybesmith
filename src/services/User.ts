@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import UserModels from '../models/UserModel';
-import { IUser2 } from '../interfaces/User';
+import { IUser2, ILogin } from '../interfaces/User';
 import { IResponse } from '../interfaces/Response';
 
 const prepareResponse = (
@@ -45,7 +45,7 @@ const validateLevel = (level: number): IResponse => {
   if (typeof level !== 'number') {
     return prepareResponse(false, 422, { error: 'Level must be a number' });
   }
-  
+
   return prepareResponse(true, 250, '');
 };
 
@@ -80,6 +80,33 @@ const create = async (user: IUser2): Promise<IResponse> => {
   return response;
 };
 
+const validateLogin = (users: Array<ILogin>, user: ILogin): IResponse => {
+  const { username, password } = user;
+  const validate = users
+    .some((u: ILogin): boolean => u.username === username && u.password === password);
+  if (!validate) return prepareResponse(false, 401, { error: 'Username or password invalid' });
+
+  return prepareResponse(true, 250, '');
+};
+
+const login = async (user: ILogin): Promise<IResponse> => {
+  const { username, password } = user;
+  const usernameResp = validateUsername(username);
+  const passwordResp = validatePassword(password);
+
+  if (!usernameResp.success) return usernameResp;
+  if (!passwordResp.success) return passwordResp;
+
+  const users = await UserModels.getAll();
+  const loginResp = validateLogin(users, user);
+  if (!loginResp.success) return loginResp;
+
+  const token = jwt.sign({ username, password }, secret);
+
+  return prepareResponse(true, 200, { token });
+};
+
 export default {
   create,
+  login,
 };

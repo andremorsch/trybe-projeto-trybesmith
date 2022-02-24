@@ -7,6 +7,6 @@ app.use(express.json());
 
 app.post('/users', UserController.create);
 
-// app.post('/login', );
+app.post('/login', UserController.login);
 
 export default app;

@@ -11,6 +11,14 @@ const create = async (req: Request, res: Response) => {
   res.status(createdUser.code).json(createdUser.message);
 };
 
+const login = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+  const makeLogin = await userServices.login({ username, password });
+
+  res.status(makeLogin.code).json(makeLogin.message);
+};
+
 export default {
   create,
+  login,
 };

@@ -2,20 +2,23 @@ import { ResultSetHeader } from 'mysql2';
 
 import connection from './connection';
 
-import { IUser, IUser2 } from '../interfaces/User';
+import { IUser, IUser2, ILogin } from '../interfaces/User';
 
-// const getAll = async (): Promise<User[]> => {
-//   const [data] = await connection.execute('SELECT username, email FROM Users');
-//   return data as IUser[];
-// };
-
-const getById = async (id: number): Promise<IUser> => {
-  const query = 'SELECT username, classe, level, password FROM Trybesmith.Users WHERE id=?';
-  const [data] = await connection.execute(query, [id]);
-  const [row] = data as IUser[];
-
-  return row;
+const getAll = async (): Promise<ILogin[]> => {
+  const query = 'SELECT username, password FROM Trybesmith.Users';
+  const [data] = await connection.execute(query);
+  console.log(data);
+  
+  return data as ILogin[];
 };
+
+// const getById = async (id: number): Promise<IUser> => {
+//   const query = 'SELECT username, classe, level, password FROM Trybesmith.Users WHERE id=?';
+//   const [data] = await connection.execute(query, [id]);
+//   const [row] = data as IUser[];
+
+//   return row;
+// };
 
 const create = async (user: IUser2): Promise<IUser> => {
   const { username, classe = '', level, password } = user;
@@ -51,8 +54,8 @@ const create = async (user: IUser2): Promise<IUser> => {
 // };
 
 export default {
-  // getAll,
-  getById,
+  getAll,
+  // getById,
   create,
   // update,
   // remove,
