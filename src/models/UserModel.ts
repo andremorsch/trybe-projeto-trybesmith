@@ -7,8 +7,7 @@ import { IUser, IUser2, ILogin } from '../interfaces/User';
 const getAll = async (): Promise<ILogin[]> => {
   const query = 'SELECT username, password FROM Trybesmith.Users';
   const [data] = await connection.execute(query);
-  console.log(data);
-  
+
   return data as ILogin[];
 };
 
