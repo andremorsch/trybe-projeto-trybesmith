@@ -8,7 +8,7 @@ const create = async (req: Request, res: Response) => {
   const userToCreate: IUser2 = { username, classe, level, password };
   const createdUser: IResponse = await userServices.create(userToCreate);
 
-  res.status(200).json(createdUser);
+  res.status(createdUser.code).json(createdUser.message);
 };
 
 export default {

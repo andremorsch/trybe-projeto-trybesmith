@@ -1,5 +1,6 @@
+import jwt from 'jsonwebtoken';
 import UserModels from '../models/UserModel';
-import { IUser, IUser2 } from '../interfaces/User';
+import { IUser2 } from '../interfaces/User';
 import { IResponse } from '../interfaces/Response';
 
 const prepareResponse = (
@@ -11,6 +12,8 @@ const prepareResponse = (
   code,
   message,
 });
+
+const secret = 'partiuTypeScript';
 
 const validateUsername = (username: string): IResponse => {
   if (!username) return prepareResponse(false, 400, { error: 'Username is required' });
@@ -37,12 +40,12 @@ const validateClasse = (classe: string): IResponse => {
 };
 
 const validateLevel = (level: number): IResponse => {
+  if (level < 1) return prepareResponse(false, 422, { error: 'Level must be greater than 0' });
   if (!level) return prepareResponse(false, 400, { error: 'Level is required' });
   if (typeof level !== 'number') {
     return prepareResponse(false, 422, { error: 'Level must be a number' });
   }
-  if (level < 1) return prepareResponse(false, 422, { error: 'Level must be greater than 0' });
-
+  
   return prepareResponse(true, 250, '');
 };
 
@@ -59,18 +62,20 @@ const validatePassword = (password: string): IResponse => {
 };
 
 const create = async (user: IUser2): Promise<IResponse> => {
-  const usernameResp = validateUsername(user.username);
-  const classeResp = validateClasse(user.classe);
-  const levelResp = validateLevel(user.level);
-  const passwordResp = validatePassword(user.password);
+  const { username, classe, level, password } = user;
+  const usernameResp = validateUsername(username);
+  const classeResp = validateClasse(classe);
+  const levelResp = validateLevel(level);
+  const passwordResp = validatePassword(password);
 
   if (!usernameResp.success) return usernameResp;
   if (!classeResp.success) return classeResp;
   if (!levelResp.success) return levelResp;
   if (!passwordResp.success) return passwordResp;
 
-  const createdUser: IUser = await UserModels.create(user);
-  const response = prepareResponse(true, 201, createdUser);
+  await UserModels.create(user);
+  const token = jwt.sign({ username, password }, secret);
+  const response = prepareResponse(true, 201, { token });
   
   return response;
 };
