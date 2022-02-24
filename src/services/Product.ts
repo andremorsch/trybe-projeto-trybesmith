@@ -65,7 +65,15 @@ const create = async (product: IProduct): Promise<IResponse> => {
   return prepareResponse(true, 201, { item: createdProd });
 };
 
+const getAll = async (): Promise<IResponse> => {
+  const allProds = await productModel.getAll();
+  const response = prepareResponse(true, 200, allProds);
+  
+  return response;
+};
+
 export default {
   create,
+  getAll,
   validateToken,
 };
