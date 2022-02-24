@@ -9,12 +9,13 @@ import { IUser, IUser2 } from '../interfaces/User';
 //   return data as IUser[];
 // };
 
-// const getById = async (id: number): Promise<IUser> => {
-//   const [data] = await connection.execute('SELECT username, email FROM Users WHERE id=?', [id]);
-//   const [row] = data as IUser[];
+const getById = async (id: number): Promise<IUser> => {
+  const query = 'SELECT username, classe, level, password FROM Trybesmith.Users WHERE id=?';
+  const [data] = await connection.execute(query, [id]);
+  const [row] = data as IUser[];
 
-//   return row;
-// };
+  return row;
+};
 
 const create = async (user: IUser2): Promise<IUser> => {
   const { username, classe = '', level, password } = user;
@@ -51,7 +52,7 @@ const create = async (user: IUser2): Promise<IUser> => {
 
 export default {
   // getAll,
-  // getById,
+  getById,
   create,
   // update,
   // remove,
