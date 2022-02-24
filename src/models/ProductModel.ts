@@ -13,6 +13,13 @@ const create = async (product: IProduct) => {
   return insertedProd;
 };
 
+const getAll = async () => {
+  const query = 'SELECT * FROM Trybesmith.Products';
+  const [result] = await connection.execute<ResultSetHeader>(query);
+  return result;
+};
+
 export default {
   create,
+  getAll,
 };
