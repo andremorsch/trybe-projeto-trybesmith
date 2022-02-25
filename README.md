@@ -1,6 +1,8 @@
 Projeto criado para a Trybe como validação de conhecimento dos alunos.
+
 Realizado em 20/fev/2022.
 
+Início do aprendizado com Typescript.
 
 # Habilidades para a realização do projeto
 
